@@ -16,7 +16,8 @@ def lex(code: str) -> Iterable[Token]:
             ("QUOTE", r"'"),
             ("LPAR", r"\("),
             ("RPAR", r"\)"),
-            ("COMMENT", r";+[^\n]+$"),
+            # ";" and all characters until a newline
+            ("COMMENT", r";[^\n]*"),
             ("NUMBER", r"[+-]?[\d]+(?:\.[\d]+)?"),
             # accepts letters, symbols and digits, but the first char cannot be a digit
             ("NAME", r"[a-zA-Z+\-.*\/<=>!?:$%_&~^][\w+\-.*\/<=>!?:$%&~^]*"),
@@ -46,7 +47,14 @@ if __name__ == "__main__":
             "( a )",
             "x ;; comentário",
             '"The word \"recursion\" has many meanings."',
-            "'(+ 1 2)"
+            "'(+ 1 2)",
+            """;;; The FACT procedure computes the factorial
+            ;;; of a non-negative integer.
+            (define fact
+              (lambda (n)
+                (if (= n 0)
+                    1        ;Base case: return 1
+                    (* n (fact (- n 1))))))"""
     )
 
     for ex in examples:
